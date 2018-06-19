@@ -17,11 +17,13 @@ import pandas as pd
 import numpy as np
 import sqlalchemy as sa
 
-rev_num = 4  # Number of videos, up to 50
+from access import db_root_pw, google_dev_key
+
+rev_num = 20  # Number of videos, up to 50
 search = 'iphone x review'  # YouTube search
 
 
-engine = sa.create_engine("mysql+mysqldb://root:backcountry@127.0.0.1/insight?charset=utf8", encoding='utf-8')
+engine = sa.create_engine("mysql+mysqldb://root:{}@127.0.0.1/insight?charset=utf8".format(db_root_pw), encoding='utf-8')
 con = engine.connect()
 # con.set_character_set('utf8')
 # https://developers.google.com/youtube/v3/code_samples/python
@@ -30,7 +32,7 @@ con = engine.connect()
 # tab of
 #   https://cloud.google.com/console
 # Please ensure that you have enabled the YouTube Data API for your project.
-DEVELOPER_KEY = "AIzaSyAtsoU8RWFMCxwn5dDdTyM2hRmGDFWqkeI"    #  Your developer key here
+DEVELOPER_KEY = google_dev_key    #  Your developer key here
 YOUTUBE_API_SERVICE_NAME = "youtube"
 YOUTUBE_API_VERSION = "v3"
 

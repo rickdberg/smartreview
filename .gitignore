@@ -3,6 +3,20 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+*.gitignore*
+*.png
+*.css
+*.vtt
+*.map
+__*__/
+flaskexample/
+youtube_data.py
+access.py
+*.js
+
+
+
+
 # C extensions
 *.so
 
