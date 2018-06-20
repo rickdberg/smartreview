@@ -13,7 +13,6 @@ Do stats for presentation
     Histogram of length of videos and length of user interface sections
 
 
-
 """
 from __future__ import print_function
 

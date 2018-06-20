@@ -12,7 +12,7 @@ Do stats for presentation
     Histogram of length of videos and length of camera sections
     Histogram of length of videos and length of user interface sections
 
-
+Perform topic modeling on full video transcript compilation in database.
 
 """
 from __future__ import print_function
