@@ -23,7 +23,6 @@ import re
 import pandas as pd
 import sqlalchemy as sa
 import matplotlib.pyplot as plt
-from nltk.stem.wordnet import WordNetLemmatizer
 from spacy.lang.en import English
 from sklearn.decomposition import NMF
 from time import time
@@ -54,12 +53,9 @@ con = engine.connect()
 
 sql = """select * from video_info ;"""
 video_info = pd.read_sql(sql, engine)
-video_info_filtered = video_info[~video_info['title'].str.contains('vs')]
-video_info_filtered = video_info_filtered[~video_info_filtered['title'].str.contains('Unbox')]
-video_info_filtered = video_info_filtered[~video_info_filtered['title'].str.contains('unbox')]
-video_info_filtered = video_info_filtered[~video_info_filtered['title'].str.contains('vs')]
-video_info_filtered = video_info_filtered[~video_info_filtered['title'].str.contains('Vs')]
-video_info_filtered = video_info_filtered[~video_info_filtered['channel'].str.contains('Vs')]
+non_relevant_words = ['vs','Vs','unbox','Unbox']
+video_info_filtered = video_info[~video_info['title'].str.contains('|'.join(non_relevant_words))]
+video_info_filtered = video_info_filtered[~video_info_filtered['channel'].str.contains('vs')]
 urls_filtered = pd.Series(video_info_filtered['url'])
 
 sql = """select length
@@ -94,6 +90,7 @@ spacy.load('en')
 parser = English()
 # nltk.download('stopwords')
 
+# Tokenizer
 def tokenize(text):
     lda_tokens = []
     tokens = parser(text)
@@ -108,17 +105,13 @@ def tokenize(text):
             lda_tokens.append(token.lower_)
     return lda_tokens
 
-# Tokenizer
+# Lemmatizer
 def get_lemma(word):
     lemma = wn.morphy(word)
     if lemma is None:
         return word
     else:
         return lemma
-
-# Lemmatizer
-def get_lemma2(word):
-    return WordNetLemmatizer().lemmatize(word)
 
 # Define stop words
 en_stop = set(nltk.corpus.stopwords.words('english'))
@@ -131,7 +124,7 @@ def prepare_text_for_tm(text):
     tokens = [get_lemma(token) for token in tokens]
     return tokens
 
-# Print selected number of top words
+# Print selected number of n top words
 def print_top_words(model, feature_names, n_top_words):
     topic_list = pd.DataFrame()
     for topic_idx, topic in enumerate(model.components_):
@@ -185,12 +178,7 @@ topic_list = print_top_words(nmf, tfidf_feature_names, n_top_words)
 
 
 # Send topics to sql as a table
-
-
-
-
-
-
+topic_list.to_sql('video_topics', con, if_exists='replace', index=False)
 
 # Count total words used in topic model fit
 all_words = ''
