@@ -3,7 +3,14 @@
 """
 Created on Fri Jun  8 16:10:08 2018
 
-@author:
+@author: Rick Berg
+
+Script for downloading youtube transcripts of camera review videos.
+Automatically loads transcripts into a local MySQL database named "insight".
+Requires:
+    input of YouTube search phrase and number of videos/transcripts.
+    Google developer key and local database pw in local python file named "access"
+
 """
 
 # import json

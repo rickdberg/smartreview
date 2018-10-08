@@ -5,17 +5,12 @@ Created on Tue Jun 12 13:10:00 2018
 
 @author: rick
 
-Do stats for presentation
-    Histogram of length of videos
-    Histogram of length of popular videos
+Script for finding start and end times of camera review sections from YouTube
+phone review videos.
+Requires:
+    transcripts to be loaded in local MySQL database by "yt_data.py"
+    topics to be identified using "find_topics.py"
 
-    Histogram of length of videos and length of camera sections
-    Histogram of length of videos and length of user interface sections
-
-
-    apply sentiment to window
-    apply sentiment to full
-    send info to db, replace
 
 """
 from __future__ import print_function
@@ -55,6 +50,7 @@ video_urls = pd.Series(video_info['url'])
 
 no_transcript_count = 0
 for url in video_urls:
+    # Load transcript
     sql = """select *
         from `{}` ;""".format(url)
     try:
@@ -67,6 +63,7 @@ for url in video_urls:
     time_points = pd.to_timedelta(transcript.start_time)
     time_points = time_points.dt.total_seconds()
 
+    # Run similarity analysis
     similarities = np.zeros(len(snippets))
     block = int(np.floor(len(snippets)/(windows)))
     sim_pad = np.zeros(block)
@@ -82,9 +79,6 @@ for url in video_urls:
         tfidf = TfidfVectorizer().fit_transform([words_top,snippet_block])
         pairwise_similarity = tfidf * tfidf.T
         sim_padded[n] = pairwise_similarity[0,1]
-
-        # Sentiment analysis here
-
 
     # Find start time of camera section
     cam_occ_times = pd.DataFrame(time_points.loc[camera_counts.nonzero()])

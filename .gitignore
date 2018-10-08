@@ -10,11 +10,11 @@ flaskexample/
 youtube_data.py
 access.py
 yt_analyzer_old.py
-yt_validation_old.py
-find_topics.py
+yt_validation_old
+yt_validation
 time_bar.py
 load_example.py
-cesarians.html
+cesareans.html
 
 # C extensions
 *.so

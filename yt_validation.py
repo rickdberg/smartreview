@@ -5,7 +5,14 @@ Created on Wed Jun 20 12:23:32 2018
 
 @author: rick
 
-Validation of time points
+Script for human-in-the-loop validation of time points
+identified by custom NLP algorithm. Allows fast validation and parameter tuning
+for individual start and stop times of camera review sections of phone review videos.
+
+Process:
+    Run script to show similarity analysis and word occurence plot
+    Adjust parameters and buffer to find best fit to start and end times
+
 
 """
 from __future__ import print_function
@@ -50,7 +57,7 @@ video_topics = pd.read_sql(sql, con)
 cam_words_top = video_topics.iloc[-n_top_words-1:-1,topic_cam]
 words_top = " ".join(cam_words_top)
 
-# SImilarity analysis
+# Similarity analysis
 sql = """select *
     from `{}` ;""".format(url)
 try:
