@@ -1,5 +1,4 @@
-# smartreview
-SmartReview - making smartphone shopping faster
+# SmartReview - making smartphone shopping faster
 
 Visit smartcamreview.com to see it in action!
 
