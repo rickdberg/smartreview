@@ -171,6 +171,7 @@ for j, yt_url in enumerate(yt_urls):
         phrase = phrase.strip()
         phrase = re.sub(r"\-", " ", phrase)
         phrase = re.sub(r"\+", "plus", phrase)
+        phrase = re.sub(r"\n", " ", phrase)
         if (phrase == '' or phrase == "[Music]" or phrase == "[Applause]" or phrase == "[Music][Applause]"):
             unique_transcript_idx = np.zeros(len(transcript))
         else:

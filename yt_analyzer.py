@@ -53,7 +53,7 @@ sql = """select *
 video_info = pd.read_sql(sql, engine)
 video_urls = pd.Series(video_info['url'])
 
-
+no_transcript_count = 0
 for url in video_urls:
     sql = """select *
         from `{}` ;""".format(url)
@@ -61,6 +61,7 @@ for url in video_urls:
         transcript = pd.read_sql(sql, engine)
     except:
         print('Transcript ' +'{}'.format(url) + ' not found')
+        no_transcript_count += 1
         continue
     snippets = transcript.caption
     time_points = pd.to_timedelta(transcript.start_time)
@@ -87,6 +88,9 @@ for url in video_urls:
 
     # Find start time of camera section
     cam_occ_times = pd.DataFrame(time_points.loc[camera_counts.nonzero()])
+    if len(cam_occ_times) == 0:
+        print('No camera occurences in {}'.format(url))
+        continue
     cam_similarities = pd.Series(sim_padded)
     cam_start_times = cam_occ_times.copy()
     cam_start_times['similarities'] = cam_similarities.loc[camera_counts.nonzero()]
@@ -94,13 +98,13 @@ for url in video_urls:
     cam_start_times = cam_start_times.rename(columns = {'index':'idx'})
     cam_zero = pd.DataFrame({'idx': [0], 'start_time': [0], 'similarities': [0]})
     cam_start_times = pd.concat((cam_zero,cam_start_times)).reset_index(drop=True)
-
-    start_options = cam_start_times.iloc[:cam_start_times.similarities[1:].idxmax()+1,:]
-    cam_delta = pd.Series(np.diff(start_options.start_time))
+    cam_start_options = cam_start_times.iloc[:cam_start_times.similarities[1:].idxmax()+1,:]
+    cam_delta = pd.Series(np.diff(cam_start_options.start_time))
     try:
         cam_delta_idx = cam_delta[cam_delta >= 40].index[-1]
     except:
-        print('Not enough camera occurences')
+        cam_delta_idx = 0
+        print('Only 1 camera occurence in {}'.format(url))
     cam_start_time = cam_start_times.start_time.iloc[cam_delta_idx+1]
     cam_start_idx = cam_start_times.idx.iloc[cam_delta_idx+1]
 
@@ -115,7 +119,6 @@ for url in video_urls:
             cam_delta_idx_end = cam_delta_end[cam_delta_end >= 44].index[0] + cam_start_times.similarities[1:].idxmax()
         except:
             cam_delta_idx_end = cam_delta_end.index[-1] + cam_start_times.similarities[1:].idxmax()
-            print('Last camera occurence')
         cam_last_time = cam_end_options.start_time[cam_delta_idx_end]
         cam_last_idx = cam_end_options.idx[cam_delta_idx_end]
 

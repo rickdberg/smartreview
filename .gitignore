@@ -3,18 +3,18 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+
 *.png
-*.css
 *.vtt
-*.map
-__*__/
 flaskexample/
 youtube_data.py
 access.py
-*.js
-
-
-
+yt_analyzer_old.py
+yt_validation_old.py
+find_topics.py
+time_bar.py
+load_example.py
+cesarians.html
 
 # C extensions
 *.so
