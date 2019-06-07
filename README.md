@@ -1,6 +1,6 @@
 # SmartReview - making smartphone shopping faster
 
-Visit smartcamreview.com to see it in action!
+Website smartcamreview.com is now deactivated since I am not able to keep the app updated as much as I would like. This project was a fun demonstration project that I built over the course of a few weeks as an Insight Data Science fellow. Feel free to message me for a demo though!
 
 Web app to allow users who want to quickly jump to the camera section of YouTube smartphone video reviews, so they don't have to watch the entire video. Saves users on average 9 minutes per video, enabling them to see many camera reviews for a given phone in a much shorter amount of time.
 
